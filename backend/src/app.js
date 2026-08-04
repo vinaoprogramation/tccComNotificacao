@@ -6,7 +6,6 @@ const imagemRoutes = require('./routes/imagemRoutes');
 const siteConfigRoutes = require('./routes/siteConfigRoutes');
 const usuarioRoutes = require('./routes/usuarioRoutes');
 
-
 const app = express();
 
 app.use(cors());
