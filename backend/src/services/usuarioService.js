@@ -41,7 +41,7 @@ async function login(username, password) {
 
 async function registrar(username, password) {
 
-  console.log(username, password);
+
   const existente = await usuarioRepository.buscarPorUsuario(username);
 
   if (existente) {
@@ -72,7 +72,42 @@ async function registrar(username, password) {
 }
 
 
+
+
+async function registrarAdmin(userId, username, password) {
+
+  const verifyId = await usuarioRepository.buscarPorId(userId)
+  if (verifyId.role != "admin"){
+    throw new Error('Usuário não é administrador');
+  }
+
+  const existente = await usuarioRepository.buscarPorUsuario(username);
+
+  if (existente) {
+    throw new Error('Usuário já existe');
+  }
+
+  const senhaHash = await hashPassword(password);
+
+  const role = "admin";
+
+  const registro = await usuarioRepository.registrar(
+    username,
+    senhaHash,
+    role
+  );
+
+  return{
+    username,
+    role
+  };
+}
+
+
+
+
 module.exports = {
   login,
-  registrar
+  registrar,
+  registrarAdmin
 };

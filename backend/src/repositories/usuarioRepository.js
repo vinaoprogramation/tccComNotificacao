@@ -5,7 +5,7 @@ async function buscarUsuarios() {
 
   const verifyAdmin = await pool.query(verifyAdminQuery);
 
-  return verifyAdmin[0][0].count || null; 
+  return verifyAdmin[0][0].count; 
 
 }
 
@@ -30,7 +30,7 @@ async function buscarPorId(userId) {
 
   const [rows] = await pool.execute(
     `
-      SELECT userId, username, password
+      SELECT userId, username, password, role
       FROM users
       WHERE userId = ?
       LIMIT 1
@@ -60,9 +60,11 @@ async function registrar(username, senhaHash, role, createdAt = new Date()) {
   };
 }
 
+
+
 module.exports = {
   buscarUsuarios,
   buscarPorUsuario,
   buscarPorId,
-  registrar
+  registrar,
 };

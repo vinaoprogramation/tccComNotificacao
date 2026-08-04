@@ -6,28 +6,10 @@ function gerarToken(payload) {
     payload,
     process.env.JWT_SECRET,
     {
-      expiresIn: '1h'
+      expiresIn: '15m'
     }
   );
 }
-
-function voltarToken(token) {
-  try {
-
-    const payloadDecodificado = jwt.verify(token, process.env.JWT_SECRET);
-
-    req.userId = payloadDecodificado.userId
-  } catch(error){
-    return res.status(500).json({
-      Erro: "Erro ao decodificar token" + error
-    })
-  }
-
-  
-
-
-}
-
 
 function verificarToken(token) {
 
@@ -39,7 +21,6 @@ function verificarToken(token) {
 
 
 module.exports = {
-  voltarToken,
   gerarToken,
   verificarToken
 };

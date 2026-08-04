@@ -48,7 +48,37 @@ async function registrar(req, res) {
     });
   }
 }
+
+
+
+
+async function registrarAdmin(req, res) {
+  
+  try {
+    const { userId, username, password } = req.body;
+  
+    if (!userId || !username || !password) {
+      return res.status(400).json({
+        error: 'Usuário e senha e id são obrigatórios'
+      });
+    }
+
+    const resultado = await usuarioService.registrarAdmin(userId, username, password);
+
+    return res.json(resultado);
+
+  } catch (error) {
+    console.error(error);
+
+    return res.status(401).json({
+      error: 'Usuário não é admin ou usuário postado já existe'
+    });
+  }
+}
+
+
 module.exports = {
   login,
-  registrar
+  registrar,
+  registrarAdmin
 };
