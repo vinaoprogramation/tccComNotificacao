@@ -160,7 +160,7 @@ async function getRequestsUser(req, res) {
 async function registrarDecisao(req, res) {
   
   try {
-    const { userId, decision, responseMessage } = req.body;
+    const { userId, type, decision, message } = req.body;
 
     const { requestId } = req.params.id
 
@@ -170,7 +170,7 @@ async function registrarDecisao(req, res) {
       });
     }
 
-    const resultado = await usuarioService.registrarDecisao(userId, decision, responseMessage, requestId);
+    const resultado = await usuarioService.registrarDecisao(userId, type, decision, message, requestId);
 
     return res.json(resultado);
 

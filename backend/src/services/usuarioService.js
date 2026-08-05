@@ -105,7 +105,7 @@ async function registrarAdmin(userId, username, password) {
 
 
 
-async function registrarRequest(userId, message) {
+async function registrarRequest(userId, type, message) {
 
   const usuario = await usuarioRepository.buscarPorId(userId);
 
