@@ -77,8 +77,90 @@ async function registrarAdmin(req, res) {
 }
 
 
+
+
+async function registrarRequest(req, res) {
+  
+  try {
+    const { userId, message } = req.body;
+
+    if(!userId || !message){
+      return res.status(400).json({
+        error: 'Id e mensagem obrigatórios'
+      });
+    }
+
+    const resultado = await usuarioService.registrarRequest(userId, message);
+
+    return res.json(resultado);
+
+  } catch (error) {
+    console.error(error);
+
+    return res.status(401).json({
+      error: 'Erro ao postar mensagem'
+    });
+  }
+}
+
+
+async function getRequestsAdmin(req, res) {
+  
+  try {
+    const { userId } = req.body;
+
+    if(!userId){
+      return res.status(400).json({
+        error: 'Id obrigatório'
+      });
+    }
+
+    const resultado = await usuarioService.getRequestsAdmin(userId);
+
+    return res.json(resultado);
+
+  } catch (error) {
+    console.error(error);
+
+    return res.status(401).json({
+      error: 'Erro ao carregar mensagem'
+    });
+  }
+}
+
+
+
+async function getRequestsUser(req, res) {
+  
+  try {
+    const { userId } = req.body;
+
+    if(!userId){
+      return res.status(400).json({
+        error: 'Id obrigatório'
+      });
+    }
+
+    const resultado = await usuarioService.getRequestsUser(userId);
+
+    return res.json(resultado);
+
+  } catch (error) {
+    console.error(error);
+
+    return res.status(401).json({
+      error: 'Erro ao carregar mensagem'
+    });
+  }
+}
+
+
+
 module.exports = {
   login,
   registrar,
-  registrarAdmin
+  registrarAdmin,
+  registrarRequest,
+  getRequestsAdmin,
+  getRequestsUser
 };

@@ -66,7 +66,7 @@ async function registrar(username, password) {
     role
   );
 
-  if(registro) {
+  if (registro) {
     return login(username, password);
   }
 }
@@ -77,7 +77,7 @@ async function registrar(username, password) {
 async function registrarAdmin(userId, username, password) {
 
   const verifyId = await usuarioRepository.buscarPorId(userId)
-  if (verifyId.role != "admin"){
+  if (verifyId.role != "admin") {
     throw new Error('Usuário não é administrador');
   }
 
@@ -97,7 +97,7 @@ async function registrarAdmin(userId, username, password) {
     role
   );
 
-  return{
+  return {
     username,
     role
   };
@@ -105,9 +105,71 @@ async function registrarAdmin(userId, username, password) {
 
 
 
+async function registrarRequest(userId, message) {
+
+  const usuario = await usuarioRepository.buscarPorId(userId);
+
+  if (!usuario) {
+    throw new Error('Usuário não existe');
+  }
+
+
+  const registro = await usuarioRepository.registrarRequest(
+    userId, usuario.username, message
+  );
+
+  return {
+    registro
+  };
+}
+
+
+
+async function getRequestsAdmin(userId) {
+
+  const usuario = await usuarioRepository.buscarPorId(userId);
+
+  if (!usuario) {
+    throw new Error('Usuário não existe');
+  }
+
+  if(usuario.role !=='admin'){
+    throw new Error('Usuário não é administrador')
+  }
+
+
+  const requests = await usuarioRepository.buscarRequestsAdmin();
+
+  return {
+    requests
+  };
+}
+
+
+async function getRequestsUser(userId) {
+
+  const usuario = await usuarioRepository.buscarPorId(userId);
+
+  if (!usuario) {
+    throw new Error('Usuário não existe');
+  }
+  
+  const requests = await usuarioRepository.buscarRequestsUser(userId);
+
+  return {
+    requests
+  };
+}
+
+
+
+
 
 module.exports = {
   login,
   registrar,
-  registrarAdmin
+  registrarAdmin,
+  registrarRequest,
+  getRequestsAdmin,
+  getRequestsUser
 };
