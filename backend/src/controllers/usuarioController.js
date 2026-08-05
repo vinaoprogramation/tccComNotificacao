@@ -82,7 +82,7 @@ async function registrarAdmin(req, res) {
 async function registrarRequest(req, res) {
   
   try {
-    const { userId, message } = req.body;
+    const { userId, type, message, decision, requestId } = req.body;
 
     if(!userId || !message){
       return res.status(400).json({
@@ -90,7 +90,7 @@ async function registrarRequest(req, res) {
       });
     }
 
-    const resultado = await usuarioService.registrarRequest(userId, message);
+    const resultado = await usuarioService.registrarRequest(userId, type, message, decision, requestId);
 
     return res.json(resultado);
 
@@ -156,11 +156,41 @@ async function getRequestsUser(req, res) {
 
 
 
+
+async function registrarDecisao(req, res) {
+  
+  try {
+    const { userId, decision, responseMessage } = req.body;
+
+    const { requestId } = req.params.id
+
+    if(!userId || !decision ){
+      return res.status(400).json({
+        error: 'Id e decisão obrigatória'
+      });
+    }
+
+    const resultado = await usuarioService.registrarDecisao(userId, decision, responseMessage, requestId);
+
+    return res.json(resultado);
+
+  } catch (error) {
+    console.error(error);
+
+    return res.status(401).json({
+      error: 'Erro ao registrar resposta'
+    });
+  }
+}
+
+
+
 module.exports = {
   login,
   registrar,
   registrarAdmin,
   registrarRequest,
   getRequestsAdmin,
-  getRequestsUser
+  getRequestsUser,
+  registrarDecisao
 };

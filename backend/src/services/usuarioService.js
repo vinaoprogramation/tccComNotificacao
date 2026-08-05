@@ -118,8 +118,12 @@ async function registrarRequest(userId, message) {
     userId, usuario.username, message
   );
 
+  const notificacao = await usuarioRepository.registrarNotificacao(userId, type, message, decision, requestId);
+
+
   return {
-    registro
+    registro,
+    notificacao
   };
 }
 
@@ -153,7 +157,7 @@ async function getRequestsUser(userId) {
   if (!usuario) {
     throw new Error('Usuário não existe');
   }
-  
+
   const requests = await usuarioRepository.buscarRequestsUser(userId);
 
   return {
@@ -161,6 +165,37 @@ async function getRequestsUser(userId) {
   };
 }
 
+
+
+async function registrarDecisao(userId, type, decision, message, requestId) {
+
+  userId, type, message, decision, requestId
+
+  const usuario = await usuarioRepository.buscarPorId(userId);
+
+  if (!usuario) {
+    throw new Error('Usuário não existe');
+  }
+
+  if(usuario.role !== 'admin'){
+    throw new Error('Usuário não é admin');
+  }
+  
+  if(!message){
+    throw new Error('Mensagem necessária');
+  }
+
+  const notificacao = await usuarioRepository.registrarNotificacao(userId, type, message, decision, requestId);
+
+  if(!notificacao){
+    throw new Error('Erro ao enviar notificacao');
+
+  }
+
+  return {
+    notificacao
+  };
+}
 
 
 
@@ -171,5 +206,6 @@ module.exports = {
   registrarAdmin,
   registrarRequest,
   getRequestsAdmin,
-  getRequestsUser
+  getRequestsUser,
+  registrarDecisao
 };

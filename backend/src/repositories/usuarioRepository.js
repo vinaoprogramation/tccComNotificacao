@@ -65,6 +65,18 @@ async function buscarRequestsUser(userId) {
 }
 
 
+async function buscarRequestPorId(requestId) {
+
+  const [rows] = await pool.execute(
+    `
+      SELECT * FROM requests WHERE requestId = ?
+    `, [requestId]
+  );
+
+  return rows[0] || null;
+}
+
+
 
 async function registrar(username, senhaHash, role, createdAt = new Date()) {
 
@@ -103,6 +115,23 @@ async function registrarRequest(userId, username, message) {
 
 
 
+async function registrarNotificacao(userId, type, message, decision, requestId) {
+
+  const [result] = await pool.execute(
+    "INSERT INTO notifications (userId, type, message, responseMessage, requestId, createdAt, isRead) VALUES (?, ?, ?, ?, ?, ?, ?)",
+    [userId, type, `Pedido enviado: ${message || null} `, `${type == 'request' ? null : decision == true? "Aprovado" : "Reprovado"}`, requestId, new Date(), `${type == 'request' ? false : true}`]
+  );
+
+  return {
+    userId,
+    type,
+    message,
+    decision,
+    requestId
+  };
+}
+
+
 module.exports = {
   buscarUsuarios,
   buscarPorUsuario,
@@ -110,5 +139,7 @@ module.exports = {
   registrar,
   registrarRequest,
   buscarRequestsAdmin,
-  buscarRequestsUser
+  buscarRequestsUser,
+  buscarRequestPorId,
+  registrarNotificacao
 };
