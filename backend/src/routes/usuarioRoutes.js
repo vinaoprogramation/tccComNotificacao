@@ -5,9 +5,9 @@ const {
     registrar,
     registrarAdmin,
     registrarRequest,
+    registrarResposta,
     getRequestsAdmin,
     getRequestsUser,
-    registrarDecisao,
 } = require('../controllers/usuarioController');
 
 const router = express.Router();
@@ -19,10 +19,9 @@ router.post('/login', login);
 router.post('/registrar', registrar);
 router.post('/registrar/admin', autenticar, autenticarId, registrarAdmin);
 router.post('/registrar/request', autenticar, registrarRequest);
+router.post('/registrar/request/resposta', autenticar, registrarResposta);
 router.post('/get/requests/admin', autenticar, autenticarId, getRequestsAdmin);
 router.post('/get/requests/user', autenticar, getRequestsUser);
-router.post('/get/requests/user', autenticar, getRequestsUser);
-router.post('/registrar/requests/:id/decisao', autenticar, autenticarId, registrarDecisao);
 
 
 module.exports = router;

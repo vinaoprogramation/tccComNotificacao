@@ -104,6 +104,33 @@ async function registrarRequest(req, res) {
 }
 
 
+async function registrarResposta(req, res) {
+  
+  try {
+    const { requestId, responseMessage, adminId, adminName, decision } = req.body;
+
+    if(!requestId || !responseMessage || !adminId || !adminName){
+      return res.status(400).json({
+        error: 'Itens obrigatórios'
+      });
+    }
+
+    const resultado = await usuarioService.registrarResposta(requestId, responseMessage, adminId, adminName, decision);
+
+    return res.json(resultado);
+
+  } catch (error) {
+    console.error(error);
+
+    return res.status(401).json({
+      error: 'Erro ao postar resposta'
+    });
+  }
+}
+
+
+
+
 async function getRequestsAdmin(req, res) {
   
   try {
@@ -157,40 +184,13 @@ async function getRequestsUser(req, res) {
 
 
 
-async function registrarDecisao(req, res) {
-  
-  try {
-    const { userId, type, decision, message } = req.body;
-
-    const { requestId } = req.params.id
-
-    if(!userId || !decision ){
-      return res.status(400).json({
-        error: 'Id e decisão obrigatória'
-      });
-    }
-
-    const resultado = await usuarioService.registrarDecisao(userId, type, decision, message, requestId);
-
-    return res.json(resultado);
-
-  } catch (error) {
-    console.error(error);
-
-    return res.status(401).json({
-      error: 'Erro ao registrar resposta'
-    });
-  }
-}
-
-
 
 module.exports = {
   login,
   registrar,
   registrarAdmin,
   registrarRequest,
+  registrarResposta,
   getRequestsAdmin,
   getRequestsUser,
-  registrarDecisao
 };

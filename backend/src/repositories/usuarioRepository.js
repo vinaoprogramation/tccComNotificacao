@@ -49,7 +49,7 @@ async function buscarRequestsAdmin() {
     `
   );
 
-  return rows[0] || null;
+  return rows || null;
 }
 
 
@@ -73,7 +73,7 @@ async function buscarRequestPorId(requestId) {
     `, [requestId]
   );
 
-  return rows[0] || null;
+  return rows || null;
 }
 
 
@@ -113,21 +113,19 @@ async function registrarRequest(userId, username, message) {
   };
 }
 
+async function registrarResposta(requestId, responseMessage, adminId, adminName, decision) {
+  console.log(requestId, responseMessage, adminId, adminName, decision)
 
-
-async function registrarNotificacao(userId, type, message, decision, requestId) {
 
   const [result] = await pool.execute(
-    "INSERT INTO notifications (userId, type, message, responseMessage, requestId, createdAt, isRead) VALUES (?, ?, ?, ?, ?, ?, ?)",
-    [userId, type, `Pedido enviado: ${message || null} `, `${type == 'request' ? null : decision == true? "Aprovado" : "Reprovado"}`, requestId, new Date(), `${type == 'request' ? false : true}`]
+    "UPDATE requests SET responseMessage = ?, adminId = ?, adminName = ?, updatedAt = ?, status = ? WHERE requestId = ?",
+    [responseMessage, adminId, adminName, new Date(), decision, requestId]
   );
 
   return {
-    userId,
-    type,
-    message,
-    decision,
-    requestId
+    requestId,
+    adminName,
+    responseMessage,
   };
 }
 
@@ -138,8 +136,8 @@ module.exports = {
   buscarPorId,
   registrar,
   registrarRequest,
+  registrarResposta,
   buscarRequestsAdmin,
   buscarRequestsUser,
   buscarRequestPorId,
-  registrarNotificacao
 };
