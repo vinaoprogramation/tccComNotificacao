@@ -82,7 +82,7 @@ async function registrarAdmin(req, res) {
 async function registrarRequest(req, res) {
   
   try {
-    const { userId, type, message, decision, requestId } = req.body;
+    const { userId, message} = req.body;
 
     if(!userId || !message){
       return res.status(400).json({
@@ -90,7 +90,7 @@ async function registrarRequest(req, res) {
       });
     }
 
-    const resultado = await usuarioService.registrarRequest(userId, type, message, decision, requestId);
+    const resultado = await usuarioService.registrarRequest(userId, message);
 
     return res.json(resultado);
 

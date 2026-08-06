@@ -105,7 +105,7 @@ async function registrarAdmin(userId, username, password) {
 
 
 
-async function registrarRequest(userId, type, message) {
+async function registrarRequest(userId, message) {
 
   const usuario = await usuarioRepository.buscarPorId(userId);
 
@@ -118,12 +118,8 @@ async function registrarRequest(userId, type, message) {
     userId, usuario.username, message
   );
 
-  const notificacao = await usuarioRepository.registrarNotificacao(userId, type, message, decision, requestId);
-
-
   return {
-    registro,
-    notificacao
+    registro
   };
 }
 
