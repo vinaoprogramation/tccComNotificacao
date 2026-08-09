@@ -129,6 +129,34 @@ async function registrarResposta(requestId, responseMessage, adminId, adminName,
   };
 }
 
+async function registrarNotificacaoRequest(userId, requestId, message) {
+
+  const [result] = await pool.execute(
+    "INSERT INTO notifications (userId, requestId, type, message, createdAt, isRead) VALUES (?, ?, ?, ?, ?, ?)",
+    [userId, requestId, 'request', message, new Date(), false]
+  );
+ 
+  return {
+    result
+  };
+}
+
+
+async function registrarNotificacaoResposta(adminId, requestId, responseMessage) {
+  const informacoes = await buscarRequestPorId(requestId);
+  const userId = informacoes[0].userId;
+  const message = informacoes[0].message;
+
+  const [result] = await pool.execute(
+    "INSERT INTO notifications (userId, adminId, requestId, type, message, responseMessage, createdAt, isRead) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+    [userId, adminId, requestId, 'response', message, responseMessage, new Date(), true]
+  );
+ 
+  return {
+    result
+  };
+}
+
 
 module.exports = {
   buscarUsuarios,
@@ -137,6 +165,8 @@ module.exports = {
   registrar,
   registrarRequest,
   registrarResposta,
+  registrarNotificacaoRequest,
+  registrarNotificacaoResposta,
   buscarRequestsAdmin,
   buscarRequestsUser,
   buscarRequestPorId,

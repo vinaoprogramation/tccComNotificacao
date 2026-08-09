@@ -2,7 +2,7 @@ const axios = require('axios');
 const sharp = require('sharp');
 
 const BASE_URL = 'https://api-ip3d.mbinfoseg.com.br/api';
-const BACKEND_URL = 'http://192.168.1.14:3001';
+const BACKEND_URL = 'http://192.168.1.14:3000';
 
 async function baixarImagem(id) {
 
@@ -12,7 +12,6 @@ async function baixarImagem(id) {
       responseType: 'arraybuffer'
     }
   );
-
   return response.data;
 }
 
@@ -24,12 +23,12 @@ async function gerarThumbnail(id) {
   const buffer = await sharp(imagem)
     .rotate()
     .resize({
-      width: 1000,
+      width: 600,
       withoutEnlargement: true,
       fit: 'inside'
     })
     .jpeg({
-      quality: 95,
+      quality: 55,
       mozjpeg: true,
       chromaSubsampling: '4:4:4'
     })

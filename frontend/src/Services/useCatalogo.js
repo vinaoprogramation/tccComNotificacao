@@ -6,7 +6,7 @@ const useCatalogo = create((set) => ({
   load: async () => {
     try {
       const response = await api.get('/catalogo',);
-      set({ projetos: response.data.projetos });
+      set({ projetos: response.data.resultado });
     } catch (error) {
       console.error('Error fetching catalogo:', error);
     }

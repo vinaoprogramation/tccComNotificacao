@@ -7,7 +7,7 @@ const useTokenStore = create((set) => ({
 
   login: async (username, password) => {
     try {
-      const response = await fetch('http://192.168.1.11:3001/usuarios/login', {
+      const response = await fetch('http://192.168.1.11:3000/usuarios/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ const useTokenStore = create((set) => ({
   registrar: async (username, password) => {
 
     try {
-      const response = await fetch('http://192.168.1.11:3001/usuarios/registrar', {
+      const response = await fetch('http://192.168.1.11:3000/usuarios/registrar', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

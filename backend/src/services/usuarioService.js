@@ -118,6 +118,8 @@ async function registrarRequest(userId, message) {
     userId, usuario.username, message
   );
 
+  const notificacao = await usuarioRepository.registrarNotificacaoRequest(userId, registro.id, message);
+
   return {
     registro
   };
@@ -138,7 +140,9 @@ async function registrarResposta(requestId, responseMessage, adminId, adminName,
   }
 
   const resposta = await usuarioRepository.registrarResposta(
-    requestId, responseMessage, adminId, adminName, decision  );
+    requestId, responseMessage, adminId, adminName, decision);
+
+  const notificacao = await usuarioRepository.registrarNotificacaoResposta(adminId, requestId, responseMessage)
 
   return {
     resposta
@@ -185,6 +189,18 @@ async function getRequestsUser(userId) {
   };
 }
 
+async function getRequestsById(requestId) {
+
+  const request = await usuarioRepository.buscarRequestPorId(requestId);
+
+  if(!request){
+    throw new Error('Requisição não existe');
+  }
+  return {
+    request
+  };
+}
+
 
 
 
@@ -197,4 +213,5 @@ module.exports = {
   registrarResposta,
   getRequestsAdmin,
   getRequestsUser,
+  getRequestsById,
 };

@@ -115,6 +115,14 @@ async function registrarResposta(req, res) {
       });
     }
 
+    const request = await usuarioService.getRequestsById(requestId);
+
+    if(request.request[0].userId == adminId){
+      return res.status(400).json({
+        error: 'Admin não pode responder a própria requisição'
+      });
+    }
+
     const resultado = await usuarioService.registrarResposta(requestId, responseMessage, adminId, adminName, decision);
 
     return res.json(resultado);

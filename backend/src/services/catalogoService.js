@@ -3,47 +3,72 @@ const cache = require('../config/cache');
 const { formatarData } = require('../utils/formatDate');
 
 const BASE_URL = 'https://api-ip3d.mbinfoseg.com.br/api';
-const BACKEND_URL = 'http://192.168.1.14:3001';
+const BACKEND_URL = 'http://192.168.1.14:3000';
 
 async function listarCatalogo(page = 1) {
+ try {
 
-  const api = await axios.get(
-    `${BASE_URL}/catalogo?page=${page}`
-  );
+    const api = await axios.get(
+      `${BASE_URL}/catalogo?page=${page}`
+    );
 
-  const projetos = api.data.projetos || [];
 
-  const detalhes = await Promise.all(
-    projetos.map(projeto =>
-      axios.get(`${BASE_URL}/catalogo/${projeto.id}`)
-    )
-  );
+    const projetos = api.data.projetos;
 
-  const resultado = projetos.map((projeto, index) => {
 
-    const detalhe = detalhes[index].data;
+    const detalhes = await Promise.all(
+      projetos.map(p =>
+        axios.get(`${BASE_URL}/catalogo/${p.id}`)
+      )
+    );
 
-    const fotos = detalhe.fotos || [];
-    const perfil = detalhe.projeto || {};
+
+
+
+    const resultado = projetos.map((p, i) => {
+      const fotos = detalhes[i].data.fotos || [];
+      const perfis = detalhes[i].data.projeto || [];
+
+
+      const isoString = detalhes[i].data.projeto.created_at;
+      const data = new Date(isoString);
+
+
+      const formatoBrasil = new Intl.DateTimeFormat('pt-BR', {
+        dateStyle: 'short',
+        timeStyle: 'short',
+        timeZone: 'America/Sao_Paulo'
+      });
+
+
+      const dataFormatada = formatoBrasil.format(data);
+
+
+      return {
+        ...p,
+        thumbnailUrl: fotos[0]
+          ? `http://192.168.1.11:3000/imagens/thumbnail/${fotos[0].id}`
+          : null,
+        fotoPerfil: perfis.usuario_id
+          ? `${BASE_URL}/catalogo/usuarios/${perfis.usuario_id}/avatar`
+          : null,
+        data: dataFormatada
+
+
+      };
+    });
+
 
     return {
-      ...projeto,
-
-      thumbnailUrl: fotos[0]
-        ? `${BASE_URL}/catalogo/fotos/${fotos[0].id}/visualizar`
-        : null,
-
-      fotoPerfil: perfil.usuario_id
-        ? `${BASE_URL}/catalogo/usuarios/${perfil.usuario_id}/avatar`
-        : null,
-
-      data: formatarData(perfil.created_at)
+      resultado
     };
-  });
 
-  return {
-    projetos: resultado
-  };
+
+  } catch (e) {
+    return { 
+      error: "erro catálogo" 
+    };
+  }
 }
 
 
@@ -93,7 +118,11 @@ async function buscarPorId(id) {
 }
 
 
+
+
 module.exports = {
   listarCatalogo,
   buscarPorId
 };
+
+
