@@ -20,8 +20,8 @@ router.post('/registrar', registrar);
 router.post('/registrar/admin', autenticar, autenticarId, registrarAdmin);
 router.post('/registrar/request', autenticar, registrarRequest);
 router.post('/registrar/request/resposta', autenticar, registrarResposta);
-router.post('/get/requests/admin', autenticar, autenticarId, getRequestsAdmin);
-router.post('/get/requests/user', autenticar, getRequestsUser);
+router.get('/get/requests/admin', autenticar, getRequestsAdmin);
+router.get('/get/requests/user', autenticar, getRequestsUser);
 
 
 module.exports = router;

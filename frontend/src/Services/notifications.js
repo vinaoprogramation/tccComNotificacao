@@ -1,41 +1,32 @@
 import { create } from 'zustand';
 import api from './api';
 
-import useTokenStore from './useTokenStore';
-export default function Notification() {
-    const userId = useTokenStore((state) => state.userid)
 
-    create((set) => ({
-        notificacoes: [],
+const useNotification = create((set) => ({
+    notificacoes: [],
 
 
-        carregaNotificacoes: async () => {
-            try {
-                const response = await fetch('get/requests/admin', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ userId })
-                });
+    carregaNotificacoes: async () => {
+        try {
+            const response = await api.get('/usuarios/get/requests/admin');
+            
+            const answer = await response.data;
 
+            set({ notificacoes: answer.requests })
+            console.log(answer.requests)
 
-                const answer = await response.json();
-
-                set({ notificacoes: answer.requests })
-                console.log(answer.requests)
-
-                if (answer.token) {
-                    set({ autenticado: true, user: { username: answer.username, role: answer.role } });
-                }
-
-            } catch (error) {
-                console.error('Erro ao fazer login:', error);
+            if (answer.token) {
+                set({ autenticado: true, user: { username: answer.username, role: answer.role } });
             }
-        },
+
+        } catch (error) {
+            console.error('Erro ao pegar as requests:', error);
+        }
+    },
 
 
 
-    }));
-}
+}));
 
+
+export default useNotification;

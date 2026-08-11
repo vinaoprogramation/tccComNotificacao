@@ -1,4 +1,5 @@
 const usuarioService = require('../services/usuarioService');
+const { verificarToken } = require('../utils/jwt');
 
 async function login(req, res) {
   try {
@@ -142,7 +143,13 @@ async function registrarResposta(req, res) {
 async function getRequestsAdmin(req, res) {
   
   try {
-    const { userId } = req.body;
+    const token = req.headers.authorization
+    const tokenFormatado = token.split(" ");
+
+    console.log(tokenFormatado[1])
+    const decoded = verificarToken(tokenFormatado[1])
+
+    const userId = decoded.userId
 
     if(!userId){
       return res.status(400).json({
