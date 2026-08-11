@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { storeToken, getToken, removeToken } from './authStorage';
 
+const baseUrl = 'http://10.0.2.2:3000/usuarios'
+
 const useTokenStore = create((set) => ({
   autenticado: false,
   user: null,
@@ -8,7 +10,7 @@ const useTokenStore = create((set) => ({
 
   login: async (username, password) => {
     try {
-      const response = await fetch('http://localhost:3000/usuarios/login', {
+      const response = await fetch(`${baseUrl}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -34,7 +36,7 @@ const useTokenStore = create((set) => ({
   registrar: async (username, password) => {
 
     try {
-      const response = await fetch('http://localhost:3000/usuarios/registrar', {
+      const response = await fetch(`${baseUrl}/registrar`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

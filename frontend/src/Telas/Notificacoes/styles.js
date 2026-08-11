@@ -17,7 +17,7 @@ export const LARGURA_ABA =
 
 const styles = StyleSheet.create({
     conteudo:{
-        padding: 20
+        
     },
     titulo:{
         fontSize: 22
@@ -42,12 +42,14 @@ const styles = StyleSheet.create({
         flexDirection: 'collumn',
     },  
     item:{
-        backgroundColor: 'rgba(0, 0, 0, 0.1)',
-        borderRadius: 5,
+        backgroundColor: 'rgb(255, 255, 255)',
+        borderRadius: 10,
         marginVertical: 10,
         paddingVertical: 20,
-        paddingHorizontal: 10,
-        elevation: 5
+        paddingHorizontal: 15,
+        elevation: 5,
+        width: width * 0.9,
+        alignSelf: 'center'
     },
     nome:{
         fontSize: 20,
@@ -55,9 +57,10 @@ const styles = StyleSheet.create({
         marginBottom: 2
     },
     resposta:{
-        backgroundColor: 'rgba(0, 0, 0, 0.23)',
+        backgroundColor: 'rgb(235, 235, 235)',
         borderRadius: 5,
-        padding: 10
+        padding: 10,
+        elevation: 5
     },
     status:{
         fontWeight: '600',
@@ -72,6 +75,36 @@ const styles = StyleSheet.create({
     },
     statusPendente:{
         color:'rgb(133, 130, 0)'
+    },
+    respostaConteudo:{
+        display: 'flex',
+        flexDirection: 'row',
+        flexWrap: 'wrap'
+    },
+    input:{
+        backgroundColor: 'rgba(0, 0, 0, 0.25)',
+        borderRadius: 5,
+        marginVertical: 10,
+        flexWrap: 'wrap',
+        
+    },
+    botaoDecisao:{
+        borderRadius: 10,
+        paddingHorizontal: 5,
+        paddingVertical: 15,
+        marginVertical: 8,
+        elevation: 5
+    },
+    botaoAprova:{
+        backgroundColor: 'rgb(169, 235, 143)',
+    },
+    botaoRecusa:{
+        backgroundColor: 'rgb(231, 101, 101)',
+        
+    },
+    textoBotaoDecisao:{
+        textAlign: 'center',
+        fontWeight:'regular'
     }
 });
 

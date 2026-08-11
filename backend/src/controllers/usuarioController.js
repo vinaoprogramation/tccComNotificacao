@@ -108,9 +108,16 @@ async function registrarRequest(req, res) {
 async function registrarResposta(req, res) {
   
   try {
-    const { requestId, responseMessage, adminId, adminName, decision } = req.body;
+    const { requestId, responseMessage, decision } = req.body;
+    
+    const token = req.headers.authorization
+    const tokenFormatado = token.split(" ");
 
-    if(!requestId || !responseMessage || !adminId || !adminName){
+    const decoded = verificarToken(tokenFormatado[1])
+
+    const adminId = decoded.userId
+
+    if(!requestId || !responseMessage || !adminId){
       return res.status(400).json({
         error: 'Itens obrigatórios'
       });
@@ -124,7 +131,13 @@ async function registrarResposta(req, res) {
       });
     }
 
-    const resultado = await usuarioService.registrarResposta(requestId, responseMessage, adminId, adminName, decision);
+    if(request.request[0].responseMessage){
+      return res.status(400).json({
+        error: 'Requisição já respondida'
+      });
+    }
+
+    const resultado = await usuarioService.registrarResposta(requestId, responseMessage, adminId, decision);
 
     return res.json(resultado);
 

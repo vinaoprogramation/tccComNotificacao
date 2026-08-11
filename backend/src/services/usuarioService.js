@@ -127,7 +127,7 @@ async function registrarRequest(userId, message) {
 
 
 
-async function registrarResposta(requestId, responseMessage, adminId, adminName, decision) {
+async function registrarResposta(requestId, responseMessage, adminId, decision) {
 
   const usuario = await usuarioRepository.buscarPorId(adminId);
 
@@ -140,9 +140,9 @@ async function registrarResposta(requestId, responseMessage, adminId, adminName,
   }
 
   const resposta = await usuarioRepository.registrarResposta(
-    requestId, responseMessage, adminId, adminName, decision);
+    requestId, responseMessage, adminId, decision);
 
-  const notificacao = await usuarioRepository.registrarNotificacaoResposta(adminId, requestId, responseMessage)
+  const notificacao = await usuarioRepository.registrarNotificacaoResposta(requestId, responseMessage)
 
   return {
     resposta
@@ -173,6 +173,28 @@ async function getRequestsAdmin(userId) {
   };
 }
 
+async function getRequestsAdmin(userId) {
+
+  const usuario = await usuarioRepository.buscarPorId(userId);
+
+  if (!usuario) {
+    throw new Error('Usuário não existe');
+  }
+
+  if(usuario.role !=='admin'){
+    throw new Error('Usuário não é administrador')
+  }
+
+
+  const requests = await usuarioRepository.buscarRequestsAdmin();
+  const notifications = await usuarioRepository.buscarNotificacoesAdmin();
+
+  return {
+    requests,
+    notifications
+  };
+}
+
 
 async function getRequestsUser(userId) {
 
@@ -183,9 +205,10 @@ async function getRequestsUser(userId) {
   }
 
   const requests = await usuarioRepository.buscarRequestsUser(userId);
-
+  const notifications = await usuarioRepository.buscarNotificacoesUser();  
   return {
-    requests
+    requests,
+    notifications
   };
 }
 

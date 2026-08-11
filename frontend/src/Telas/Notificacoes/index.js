@@ -11,16 +11,38 @@ export default function Notificacoes({ navigation }) {
   const notificacoes = useNotification((state) => state.notificacoes);
   const mensagem = useNotification((state) => state.mensagem);
   const carregaNotificacoes = useNotification((state) => state.carregaNotificacoes);
+  const enviaResposta = useNotification((state) => state.enviaResposta);
 
   const [expande, setExpande] = useState(false);
-  const [requestExpande, setRequestExpande] = useState('')
-  
+  const [requestExpande, setRequestExpande] = useState('');
+  const [mensagemAdmin, setMensagemAdmin] = useState('');
+
 
   const mudaExpande = (requestId) => {
-    setExpande(!expande);
+    if(requestId == requestExpande){
+      setExpande(!expande)
+    } else{
+      setMensagemAdmin('')
+      setExpande(true);
     setRequestExpande(requestId)
-    console.log(requestId)
-  };  
+    }
+    
+  };
+
+  const envia = (requestId, responseMessage, decision) => {
+    if(!requestId || !responseMessage || !decision){
+      console.log("Faltam coisas")
+      return;
+    }
+    if(decision == false){
+      enviaResposta(requestId, responseMessage, 'rejected');
+      setMensagemAdmin('')
+      return;
+    } else{
+      enviaResposta(requestId, responseMessage, 'approved');
+      ('')
+    }
+  }
 
 
   useEffect(() => {
@@ -49,29 +71,61 @@ export default function Notificacoes({ navigation }) {
 
           renderItem={({ item }) => (
             <TouchableOpacity
-            onPress={() => {
-              mudaExpande(item.requestId)
-            }}
+              onPress={() => {
+                mudaExpande(item.requestId)
+              }}
             >
               <View style={styles.item}>
 
                 <Text style={styles.nome}>{item.username}</Text>
                 <Text style={styles.mensagem}>{item.message}</Text>
                 <Text>Pedido enviado às {item.createdAt}</Text>
-                <Text style={[styles.mensagem, styles.status, item.status == 'approved'? (styles.statusAprovado) : item.status == 'pending'? (styles.statusPendente) : (styles.statusReprovado)]}>{item.status}</Text>
+                <Text style={[styles.mensagem, styles.status, item.status == 'approved' ? (styles.statusAprovado) : item.status == 'pending' ? (styles.statusPendente) : (styles.statusReprovado)]}>{item.status}</Text>
 
-                {expande? item.requestId == requestExpande? (<View style={styles.resposta}>
+                {expande ? item.requestId == requestExpande ? (<View style={styles.resposta}>
                   <Text style={[styles.conteudoResposta, styles.mensagem]}>
-                    {item.status == 'approved'? ("Aprovado por "+item.adminName) : (null)}
-                    {item.status == 'rejected'? ("Negado por "+item.adminName) : (null)}
-                    </Text>
+                    {item.status == 'approved' ? ("Aprovado por " + item.adminName) : (null)}
+                    {item.status == 'rejected' ? ("Negado por " + item.adminName) : (null)}
+                  </Text>
 
+                  <View style={styles.respostaConteudo}>
                     <Text style={[styles.conteudoResposta, styles.mensagem]}>
                       Resposta: {item.responseMessage}
-                      </Text>
-                      <Text>Ás {item.createdAt}</Text>
-                </View>) : (null)  : (null)}
-                
+                    </Text>
+                    {item.responseMessage ? (null) : (<Text style={[styles.conteudoResposta, styles.mensagem]}>Pendente</Text>)}
+                  </View>
+
+                  <TextInput
+                    value={mensagemAdmin}
+                    onChangeText={setMensagemAdmin}
+                    placeholder='Envie a resposta da requisição por aqui'
+                    style={[styles.input]}
+                    multiline={true}
+                  />
+
+                  <TouchableOpacity style={[styles.botaoDecisao, styles.botaoAprova]}
+                  onPress={() => {
+                    envia(item.requestId, mensagemAdmin, true)
+                  }}
+                  >
+                    <Text style={styles.textoBotaoDecisao}>Aprovar</Text>
+                  </TouchableOpacity>
+
+
+                  <TouchableOpacity style={[styles.botaoDecisao, styles.botaoRecusa]}>
+                  onPress={() => {
+                    envia(item.requestId, mensagemAdmin, false)
+                  }}
+
+                    <Text style={styles.textoBotaoDecisao}>Recusar</Text>
+                  </TouchableOpacity>
+
+                  
+
+
+
+                </View>) : (null) : (null)}
+
 
 
 

@@ -3,7 +3,7 @@ const cache = require('../config/cache');
 const { formatarData } = require('../utils/formatDate');
 
 const BASE_URL = 'https://api-ip3d.mbinfoseg.com.br/api';
-const BACKEND_URL = 'http://192.168.1.14:3000';
+const BACKEND_URL = 'http://localhost:3000';
 
 async function listarCatalogo(page = 1) {
  try {

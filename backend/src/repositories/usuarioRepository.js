@@ -5,7 +5,7 @@ async function buscarUsuarios() {
 
   const verifyAdmin = await pool.query(verifyAdminQuery);
 
-  return verifyAdmin[0][0].count; 
+  return verifyAdmin[0][0].count;
 
 }
 
@@ -52,8 +52,19 @@ async function buscarRequestsAdmin() {
   return rows || null;
 }
 
+async function buscarNotificacoesAdmin() {
 
-async function buscarRequestsUser(userId) {
+  const [rows] = await pool.execute(
+    `
+      SELECT * FROM notifications
+    `
+  );
+
+  return rows || null;
+}
+
+
+async function buscarNotificacoesUser(userId) {
 
   const [rows] = await pool.execute(
     `
@@ -63,6 +74,19 @@ async function buscarRequestsUser(userId) {
 
   return rows || null;
 }
+
+async function buscarRequestsUser(userId) {
+
+  const [rows] = await pool.execute(
+    `
+      SELECT * FROM notifications WHERE userId = ?
+    `, [userId]
+  );
+
+  return rows || null;
+}
+
+
 
 
 async function buscarRequestPorId(requestId) {
@@ -113,14 +137,27 @@ async function registrarRequest(userId, username, message) {
   };
 }
 
-async function registrarResposta(requestId, responseMessage, adminId, adminName, decision) {
-  console.log(requestId, responseMessage, adminId, adminName, decision)
+async function registrarResposta(requestId, responseMessage, adminId, decision) {
+  console.log(requestId, responseMessage, adminId, decision);
+
+  const adminName = await pool.execute(
+    "SELECT username FROM users WHERE userId = ?",
+    [adminId]
+  )
+
+  const nameFiltered = adminName[0][0].username;
+
+  console.log(nameFiltered)
+
+  if (adminName) {
+    console.log(requestId, responseMessage, adminId, decision);
+    const [result] = await pool.execute(
+      "UPDATE requests SET responseMessage = ?, adminId = ?, adminName = ?, updatedAt = ?, status = ? WHERE requestId = ?",
+      [responseMessage, adminId, nameFiltered, new Date(), decision, requestId]
+    );
+  }
 
 
-  const [result] = await pool.execute(
-    "UPDATE requests SET responseMessage = ?, adminId = ?, adminName = ?, updatedAt = ?, status = ? WHERE requestId = ?",
-    [responseMessage, adminId, adminName, new Date(), decision, requestId]
-  );
 
   return {
     requestId,
@@ -135,7 +172,7 @@ async function registrarNotificacaoRequest(userId, requestId, message) {
     "INSERT INTO notifications (userId, requestId, type, message, createdAt, isRead) VALUES (?, ?, ?, ?, ?, ?)",
     [userId, requestId, 'request', message, new Date(), false]
   );
- 
+
   return {
     result
   };
@@ -144,14 +181,14 @@ async function registrarNotificacaoRequest(userId, requestId, message) {
 
 async function registrarNotificacaoResposta(adminId, requestId, responseMessage) {
   const informacoes = await buscarRequestPorId(requestId);
-  const userId = informacoes[0].userId;
-  const message = informacoes[0].message;
+  const userId = informacoes[0][0].userId;
+  const message = informacoes[0][0].message;
 
   const [result] = await pool.execute(
     "INSERT INTO notifications (userId, adminId, requestId, type, message, responseMessage, createdAt, isRead) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
     [userId, adminId, requestId, 'response', message, responseMessage, new Date(), true]
   );
- 
+
   return {
     result
   };
@@ -169,5 +206,7 @@ module.exports = {
   registrarNotificacaoResposta,
   buscarRequestsAdmin,
   buscarRequestsUser,
+  buscarNotificacoesAdmin,
+  buscarNotificacoesUser,
   buscarRequestPorId,
 };

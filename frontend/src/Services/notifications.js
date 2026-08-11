@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import api from './api';
 
 
+
 const useNotification = create((set) => ({
     notificacoes: [],
     mensagem: null,
@@ -20,10 +21,29 @@ const useNotification = create((set) => ({
 
 
         } catch (error) {
-            console.log("Damn")
             set({ mensagem: "Necessita Permissão Administrativa" })
         }
     },
+
+
+    enviaResposta: async (requestId, responseMessage, decision) => {
+    
+        try {
+          const response = await api.get(`/usuarios/registrar/request/resposta`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ requestId, responseMessage, decision })
+          });    
+          
+    
+        } catch (error) {
+          console.error('Erro ao enviar resposta:', error);
+        }
+      },
+
+
 
 
 

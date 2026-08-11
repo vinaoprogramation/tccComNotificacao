@@ -8,7 +8,6 @@ async function autenticarId(req, res, next) {
     const token = req.headers.authorization
     const tokenFormatado = token.split(" ");
 
-    console.log("Token: "+tokenFormatado[1])
     const decoded = verificarToken(tokenFormatado[1])
 
     const userId = decoded.userId

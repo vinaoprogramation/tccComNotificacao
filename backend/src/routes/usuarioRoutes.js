@@ -24,4 +24,5 @@ router.get('/get/requests/admin', autenticar, autenticarId, getRequestsAdmin);
 router.get('/get/requests/user', autenticar, getRequestsUser);
 
 
+
 module.exports = router;
