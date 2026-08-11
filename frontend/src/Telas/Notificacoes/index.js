@@ -9,6 +9,7 @@ import useNotification from '../../Services/notifications';
 
 export default function Notificacoes({ navigation }) {
   const notificacoes = useNotification((state) => state.notificacoes);
+  const mensagem = useNotification((state) => state.mensagem);
   const carregaNotificacoes = useNotification((state) => state.carregaNotificacoes);
 
   useEffect(() => {
@@ -18,18 +19,11 @@ export default function Notificacoes({ navigation }) {
   }, [carregaNotificacoes])
 
   return <>
-    <ScrollView>
-      <View>
-        <Text style={styles.texto}>Teste</Text>
-      </View>
+    {!mensagem ? (<ScrollView>
+      <View style={styles.conteudo}>
+        <Text style={styles.titulo}>Teste</Text>
 
-      <TouchableOpacity onPress={() => {
-        navigation.goBack();
-      }}
 
-        style={{ backgroundColor: 'red' }}
-
-      >
         <FlatList
 
           data={notificacoes}
@@ -40,15 +34,51 @@ export default function Notificacoes({ navigation }) {
             String(item.requestId)
           }
 
+          style={styles.mensagems}
+
           renderItem={({ item }) => (
-            <View>
-              <Text>{item.message}</Text>
+            <View style={styles.item}>
+
+              <Text style={styles.nome}>{item.username}</Text>
+              <Text style={styles.mensagem}>{item.message}</Text>
+
+              <View style={styles.resposta}>
+                <Text style={[styles.conteudoResposta, styles.mensagem]}>{item.status}</Text>
+                <Text style={[styles.conteudoResposta, styles.mensagem]}>{item.responseMessage}</Text>
+                <Text style={[styles.conteudoResposta, styles.mensagem]}>{item.adminName}</Text>
+              </View>
+
+
+
             </View>
           )}
         />
 
-        <Text>Voltar</Text>
+      </View>
+
+
+      <TouchableOpacity onPress={() => {
+        navigation.goBack();
+      }}
+
+        style={styles.botaoVoltar}
+      >
+
+        <Text style={styles.textoBotao}>Voltar</Text>
       </TouchableOpacity>
-    </ScrollView>
+    </ScrollView>) : (
+
+      <View style={styles.conteudo}>
+        <Text style={styles.mensagem}>{mensagem}</Text>
+        <TouchableOpacity onPress={() => {
+          navigation.goBack();
+        }}
+          style={styles.botaoVoltar}
+
+        >
+          <Text style={styles.textoBotao}>Voltar</Text>
+        </TouchableOpacity>
+      </View>)}
+
   </>
 }

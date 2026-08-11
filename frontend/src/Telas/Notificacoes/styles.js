@@ -16,67 +16,47 @@ export const LARGURA_ABA =
 
 
 const styles = StyleSheet.create({
-
-    fundo: {
-
-        zIndex: 2,
-
-        elevation: 5,
-
-        backgroundColor: "#ffffff",
-
-        height: height,
-
-        width: LARGURA_ABA,
-
-        position: "absolute"
-
+    conteudo:{
+        padding: 20
     },
-
-
-    titulo: {
-
-        fontSize: 30,
-
-        marginTop: 20,
-
-        marginLeft: 200
-
-    },
-
-
-    botaoConteudo: {
-
-        borderRadius: 5,
-
-        backgroundColor: "#cb9bde",
-
-        padding: 10
-
-    },
-
-
-    texto: {
-
+    titulo:{
         fontSize: 22
-
     },
-
-
-    conteudo: {
-
-        padding: 20,
-
-        gap: 10
-
+    mensagem:{
+        fontSize: 16
     },
-
-
-    perfil: {},
-
-
-    notificacoes: {}
-
+    botaoVoltar:{
+        backgroundColor: 'green',
+        width: width*0.6,
+        borderRadius: 15,
+        padding: 15,
+        alignSelf: 'center'
+    },
+    textoBotao:{
+        color: '#ffffff',
+        textAlign: 'center',
+        fontWeight: 'bold'
+    },
+    mensagems:{
+        display: 'flex',
+        flexDirection: 'collumn',
+    },  
+    item:{
+        backgroundColor: 'rgba(0, 0, 0, 0.1)',
+        borderRadius: 5,
+        marginVertical: 10,
+        paddingVertical: 20,
+        paddingHorizontal: 10
+    },
+    nome:{
+        fontSize: 20,
+        fontWeight: 'bold'
+    },
+    resposta:{
+        backgroundColor: 'rgba(0, 0, 0, 0.23)',
+        borderRadius: 5,
+        padding: 10
+    }
 });
 
 

@@ -19,8 +19,8 @@ router.post('/login', login);
 router.post('/registrar', registrar);
 router.post('/registrar/admin', autenticar, autenticarId, registrarAdmin);
 router.post('/registrar/request', autenticar, registrarRequest);
-router.post('/registrar/request/resposta', autenticar, registrarResposta);
-router.get('/get/requests/admin', autenticar, getRequestsAdmin);
+router.post('/registrar/request/resposta', autenticar, autenticarId, registrarResposta);
+router.get('/get/requests/admin', autenticar, autenticarId, getRequestsAdmin);
 router.get('/get/requests/user', autenticar, getRequestsUser);
 
 

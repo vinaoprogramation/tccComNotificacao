@@ -146,7 +146,6 @@ async function getRequestsAdmin(req, res) {
     const token = req.headers.authorization
     const tokenFormatado = token.split(" ");
 
-    console.log(tokenFormatado[1])
     const decoded = verificarToken(tokenFormatado[1])
 
     const userId = decoded.userId

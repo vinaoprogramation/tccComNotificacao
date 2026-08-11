@@ -1,11 +1,17 @@
 const usuarioRepository = require('../repositories/usuarioRepository');
+const { verificarToken } = require('../utils/jwt');
 
 
 async function autenticarId(req, res, next) {
 
   try {
-    const userId = req.body.userId;
-    console.log(userId)
+    const token = req.headers.authorization
+    const tokenFormatado = token.split(" ");
+
+    console.log("Token: "+tokenFormatado[1])
+    const decoded = verificarToken(tokenFormatado[1])
+
+    const userId = decoded.userId
 
     const verifyId = await usuarioRepository.buscarPorId(userId)
 
