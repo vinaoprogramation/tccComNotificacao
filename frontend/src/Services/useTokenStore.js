@@ -4,10 +4,11 @@ import { storeToken, getToken, removeToken } from './authStorage';
 const useTokenStore = create((set) => ({
   autenticado: false,
   user: null,
+  id:null,
 
   login: async (username, password) => {
     try {
-      const response = await fetch('http://192.168.1.11:3000/usuarios/login', {
+      const response = await fetch('http://localhost:3000/usuarios/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -21,7 +22,7 @@ const useTokenStore = create((set) => ({
       await storeToken(answer.token);
 
       if (answer.token) {
-        set({ autenticado: true, user: { username: answer.username, role: answer.role } });
+        set({ autenticado: true, user: { username: answer.username, role: answer.role, id: answer.userId } });
       }      
 
     } catch (error) {
@@ -33,7 +34,7 @@ const useTokenStore = create((set) => ({
   registrar: async (username, password) => {
 
     try {
-      const response = await fetch('http://192.168.1.11:3000/usuarios/registrar', {
+      const response = await fetch('http://localhost:3000/usuarios/registrar', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

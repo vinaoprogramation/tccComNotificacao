@@ -1,11 +1,16 @@
 import react, { useState, useEffect } from 'react';
+
 import { View, Text, Button, StyleSheet, TextInput, FlatList, ScrollView, TouchableOpacity } from 'react-native';
+
+import Menu from '../../ComponentesReutilzaveis/Menu';
 
 import styles from './styles';
 export default function Inicial({ navigation }) {
   return (
     <ScrollView style={styles.fundo}>
+      
       <View>
+      
         <Text style={styles.titulo}>Bem Vindo</Text>
 
         <View>

@@ -47,7 +47,7 @@ async function listarCatalogo(page = 1) {
       return {
         ...p,
         thumbnailUrl: fotos[0]
-          ? `http://192.168.1.11:3000/imagens/thumbnail/${fotos[0].id}`
+          ? `http://localhost:3000/imagens/thumbnail/${fotos[0].id}`
           : null,
         fotoPerfil: perfis.usuario_id
           ? `${BASE_URL}/catalogo/usuarios/${perfis.usuario_id}/avatar`

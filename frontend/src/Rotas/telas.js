@@ -8,6 +8,7 @@ import HomeScreen from '../Telas/HomeScreen';
 import Inicial from '../Telas/Inicial';
 import Login from '../Telas/Login';
 import Registro from '../Telas/Registro';
+import Notificacoes from '../Telas/Notificacoes';
 
 const Tab = createNativeStackNavigator();
 
@@ -32,6 +33,10 @@ export default function Telas() {
 
         <Tab.Screen name="HomeScreen" options={{ headerShown: false }}
         component={HomeScreen}
+        />
+
+        <Tab.Screen name="Notificacoes" options={{ headerShown: false }}
+        component={Notificacoes}
         />
 
 
