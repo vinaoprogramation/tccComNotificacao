@@ -46,16 +46,32 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginVertical: 10,
         paddingVertical: 20,
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
+        elevation: 5
     },
     nome:{
         fontSize: 20,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        marginBottom: 2
     },
     resposta:{
         backgroundColor: 'rgba(0, 0, 0, 0.23)',
         borderRadius: 5,
         padding: 10
+    },
+    status:{
+        fontWeight: '600',
+        paddingVertical: 5,
+        fontSize: 20
+    },
+    statusAprovado:{
+        color: 'green'
+    },
+    statusReprovado:{
+        color: 'red'
+    },
+    statusPendente:{
+        color:'rgb(133, 130, 0)'
     }
 });
 

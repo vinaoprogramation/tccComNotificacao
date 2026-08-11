@@ -14,7 +14,6 @@ const useNotification = create((set) => ({
             const answer = await response.data;
 
             set({ notificacoes: answer.requests })
-            console.log(answer.requests)
 
 
 
