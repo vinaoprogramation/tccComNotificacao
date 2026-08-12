@@ -3,7 +3,7 @@ const { width, height } = Dimensions.get('screen')
 
 const styles = StyleSheet.create({
   fundo: {
-    backgroundColor: "#7e6fff"
+    backgroundColor: "#000000"
   },
   titulo: {
     fontSize: 35,

@@ -12,8 +12,20 @@ const {
 const styles = StyleSheet.create({
 
   fundo: {
-      backgroundColor: "#7e6fff",
+      backgroundColor: "#ffffff",
       flex: 1
+  },
+  saudacao:{
+    fontSize: 40,
+    fontWeight: '400',
+    marginLeft: 15,
+    marginTop: 110,
+    marginBottom: 40,
+    color: '#000000',
+    textShadowColor: '#00000036',
+    textShadowRadius: {width: 0.5, height: 0.5},
+    textShadowRadius: 2,
+    position: 'relative',
   },
 
 
@@ -60,8 +72,6 @@ const styles = StyleSheet.create({
       width: "100%",
       height: 300,
 
-      borderTopRightRadius: 10,
-      borderTopLeftRadius: 10
   },
 
 

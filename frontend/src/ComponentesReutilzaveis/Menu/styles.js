@@ -10,23 +10,9 @@ const {
 
 
 const styles = StyleSheet.create({
-
-    fundo: {
-
-        zIndex: 3,
-
-        borderBottomRightRadius: 10,
-
-        elevation: 5,
-
-        borderRadius: 100,
-
-        marginLeft: 5,
-
-        marginTop: 5
-
+    fundo:{
+        zIndex: 3
     },
-
 
     imagemMenu: {
 
@@ -34,7 +20,10 @@ const styles = StyleSheet.create({
 
         height: width * 0.15,
 
-        position: "absolute"
+        position: "absolute",
+        marginTop: 50,
+        marginLeft: 10,
+        zIndex: 3
 
     }
 

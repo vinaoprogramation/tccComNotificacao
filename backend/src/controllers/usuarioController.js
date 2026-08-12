@@ -27,10 +27,10 @@ async function login(req, res) {
 
 
 async function registrar(req, res) {
-  
+
   try {
     const { username, password } = req.body;
-  
+
     if (!username || !password) {
       return res.status(400).json({
         error: 'Usuário e senha são obrigatórios'
@@ -54,10 +54,10 @@ async function registrar(req, res) {
 
 
 async function registrarAdmin(req, res) {
-  
+
   try {
     const { userId, username, password } = req.body;
-  
+
     if (!userId || !username || !password) {
       return res.status(400).json({
         error: 'Usuário e senha e id são obrigatórios'
@@ -81,11 +81,21 @@ async function registrarAdmin(req, res) {
 
 
 async function registrarRequest(req, res) {
-  
-  try {
-    const { userId, message} = req.body;
 
-    if(!userId || !message){
+  try {
+     const message = req.body.body;
+    
+    const token = req.headers.authorization
+
+    const tokenFormatado = token.split(" ");
+
+    const decoded = verificarToken(tokenFormatado[1])
+
+    const userId = decoded.userId
+
+    console.log(userId, message)
+
+    if (!userId || !message) {
       return res.status(400).json({
         error: 'Id e mensagem obrigatórios'
       });
@@ -106,10 +116,12 @@ async function registrarRequest(req, res) {
 
 
 async function registrarResposta(req, res) {
-  
+
   try {
-    const { requestId, responseMessage, decision } = req.body;
-    
+    const { responseMessage, decision } = req.body;
+    console.log(req.body)
+    const requestId = req.body.body
+
     const token = req.headers.authorization
     const tokenFormatado = token.split(" ");
 
@@ -117,7 +129,9 @@ async function registrarResposta(req, res) {
 
     const adminId = decoded.userId
 
-    if(!requestId || !responseMessage || !adminId){
+    console.log(requestId, responseMessage, decision, adminId)
+
+    if (!requestId || !responseMessage || !adminId) {
       return res.status(400).json({
         error: 'Itens obrigatórios'
       });
@@ -125,13 +139,15 @@ async function registrarResposta(req, res) {
 
     const request = await usuarioService.getRequestsById(requestId);
 
-    if(request.request[0].userId == adminId){
+    console.log(request.request)
+
+    if (request.request.userId == adminId) {
       return res.status(400).json({
         error: 'Admin não pode responder a própria requisição'
       });
     }
 
-    if(request.request[0].responseMessage){
+    if (request.request.responseMessage) {
       return res.status(400).json({
         error: 'Requisição já respondida'
       });
@@ -154,7 +170,7 @@ async function registrarResposta(req, res) {
 
 
 async function getRequestsAdmin(req, res) {
-  
+
   try {
     const token = req.headers.authorization
     const tokenFormatado = token.split(" ");
@@ -163,7 +179,7 @@ async function getRequestsAdmin(req, res) {
 
     const userId = decoded.userId
 
-    if(!userId){
+    if (!userId) {
       return res.status(400).json({
         error: 'Id obrigatório'
       });
@@ -185,11 +201,17 @@ async function getRequestsAdmin(req, res) {
 
 
 async function getRequestsUser(req, res) {
-  
-  try {
-    const { userId } = req.body;
 
-    if(!userId){
+  try {
+    const token = req.headers.authorization
+    const tokenFormatado = token.split(" ");
+
+    const decoded = verificarToken(tokenFormatado[1])
+
+    const userId = decoded.userId
+    console.log(userId)
+
+    if (!userId) {
       return res.status(400).json({
         error: 'Id obrigatório'
       });

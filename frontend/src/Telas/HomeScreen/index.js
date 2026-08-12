@@ -9,16 +9,17 @@ import {
     TouchableOpacity
 } from "react-native";
 
+import MenuRodape from "../../ComponentesReutilzaveis/MenuRodape";
+
 import useTokenStore from "../../Services/useTokenStore";
 import useCatalogo from "../../Services/useCatalogo";
 import useSiteConfig from "../../Services/useSiteConfig";
 
-import Menu from "../../ComponentesReutilzaveis/Menu";
-import AbaLateral from "../../ComponentesReutilzaveis/AbaLateral";
-
 import styles from "./styles";
 
-export default function HomeScreen({ navigation }) {
+
+
+export default function HomeScreen({navigation}) {
 
     const projetos = useCatalogo(
         (state) => state.projetos
@@ -40,8 +41,10 @@ export default function HomeScreen({ navigation }) {
         (state) => state.autenticado
     );
 
-    const logout = useTokenStore(
-        (state) => state.logout
+    
+
+    const user = useTokenStore(
+        (state) => state.user
     );
 
 
@@ -61,54 +64,18 @@ export default function HomeScreen({ navigation }) {
     ]);
 
 
-    useEffect(() => {
-
-        const unsubscribe = navigation.addListener(
-            "beforeRemove",
-            (e) => {
-
-                e.preventDefault();
-
-                Alert.alert(
-                    "Sair da conta?",
-                    "Deseja realmente sair e deslogar do aplicativo?",
-                    [
-                        {
-                            text: "Cancelar",
-                            style: "cancel"
-                        },
-
-                        {
-                            text: "Sair e Deslogar",
-                            style: "destructive",
-
-                            onPress: () => {
-
-                                logout();
-
-                                navigation.dispatch(
-                                    e.data.action
-                                );
-
-                            }
-                        }
-                    ]
-                );
-
-            }
-        );
-
-        return unsubscribe;
-
-    }, [
-        navigation,
-        logout
-    ]);
+   useEffect(() => {
+    console.log("HOMESCREEEN !")
+   }, [])
 
 
-    return (
+    return <>
+            
 
         <View style={styles.fundo}>
+
+         
+
 
 
             <Image
@@ -120,12 +87,7 @@ export default function HomeScreen({ navigation }) {
 
 
 
-            <Menu />
-
-
-
-            <AbaLateral navigation={navigation}/>
-
+            
 
 
             <FlatList
@@ -140,11 +102,19 @@ export default function HomeScreen({ navigation }) {
                     String(item.id)
                 }
 
+                ListHeaderComponent={() => (
+                    <Text style={styles.saudacao}>Olá, {user?.username}</Text>
+                )}
+
                 renderItem={({ item }) => (
 
                     <View style={styles.item}>
 
-                        <TouchableOpacity>
+                        <TouchableOpacity
+                        onPress={() => {
+                            navigation.navigate('DetalhesImpressao', item)
+                        }}
+                        >
 
                             <Image
                                 style={
@@ -214,6 +184,6 @@ export default function HomeScreen({ navigation }) {
 
         </View>
 
-    );
+    </>;
 
 }

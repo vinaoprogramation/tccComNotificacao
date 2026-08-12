@@ -5,6 +5,7 @@ import api from './api';
 
 const useNotification = create((set) => ({
     notificacoes: [],
+    notificacoesUser: [],
     mensagem: null,
 
 
@@ -26,23 +27,67 @@ const useNotification = create((set) => ({
     },
 
 
-    enviaResposta: async (requestId, responseMessage, decision) => {
-    
+
+
+
+
+    carregaNotificacoesUser: async () => {
         try {
-          const response = await api.get(`/usuarios/registrar/request/resposta`, {
+            const response = await api.get('/usuarios/get/requests/user');
+
+            const answer = await response.data;
+
+            set({ notificacoesUser: answer.requests })
+            console.log(answer.requests)
+
+
+        } catch (error) {
+            set({ mensagem: "Não existem requisições no momento" })
+        }
+    },
+
+
+
+
+
+
+    enviaResposta: async (requestId, responseMessage, decision) => {
+      
+        try {
+          const response = await api.post(`/usuarios/registrar/request/resposta`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ requestId, responseMessage, decision })
+            body: requestId, responseMessage, decision
           });    
           
     
         } catch (error) {
           console.error('Erro ao enviar resposta:', error);
+          console.log(error.response.data)
         }
       },
 
+
+
+      enviaRequest: async (message) => {
+      
+        try {
+          const response = await api.post(`/usuarios/registrar/request`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: message
+          });    
+          
+    
+        } catch (error) {
+          console.error('Erro ao enviar resposta:', error);
+          console.log(error.response.data)
+        }
+      },
 
 
 

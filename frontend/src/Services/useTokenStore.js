@@ -1,12 +1,12 @@
 import { create } from 'zustand';
 import { storeToken, getToken, removeToken } from './authStorage';
 
-const baseUrl = 'http://10.0.2.2:3000/usuarios'
+const baseUrl = 'http://192.168.1.11:3000/usuarios'
 
 const useTokenStore = create((set) => ({
   autenticado: false,
   user: null,
-  id:null,
+  mode: false,
 
   login: async (username, password) => {
     try {
@@ -23,8 +23,14 @@ const useTokenStore = create((set) => ({
       
       await storeToken(answer.token);
 
+      
       if (answer.token) {
-        set({ autenticado: true, user: { username: answer.username, role: answer.role, id: answer.userId } });
+        set({ autenticado: true, user: { username: answer.username } });
+        if(answer.role == 'admin'){
+          set({mode: true})
+        } else{
+          set({mode: false})
+        }
       }      
 
     } catch (error) {
@@ -48,7 +54,7 @@ const useTokenStore = create((set) => ({
       await storeToken(answer.token);
 
       if (answer.token) {
-        set({ autenticado: true, user: { username: answer.username, role: answer.role } });
+        set({ autenticado: true, user: { username: answer.username } });
       }
       
 

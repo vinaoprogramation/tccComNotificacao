@@ -68,7 +68,7 @@ async function buscarNotificacoesUser(userId) {
 
   const [rows] = await pool.execute(
     `
-      SELECT * FROM requests WHERE userId = ?
+      SELECT * FROM notifications WHERE userId = ?
     `, [userId]
   );
 
@@ -79,7 +79,7 @@ async function buscarRequestsUser(userId) {
 
   const [rows] = await pool.execute(
     `
-      SELECT * FROM notifications WHERE userId = ?
+      SELECT * FROM requests WHERE userId = ?
     `, [userId]
   );
 
@@ -97,7 +97,7 @@ async function buscarRequestPorId(requestId) {
     `, [requestId]
   );
 
-  return rows || null;
+  return rows[0] || null;
 }
 
 
@@ -138,7 +138,6 @@ async function registrarRequest(userId, username, message) {
 }
 
 async function registrarResposta(requestId, responseMessage, adminId, decision) {
-  console.log(requestId, responseMessage, adminId, decision);
 
   const adminName = await pool.execute(
     "SELECT username FROM users WHERE userId = ?",
@@ -147,10 +146,7 @@ async function registrarResposta(requestId, responseMessage, adminId, decision) 
 
   const nameFiltered = adminName[0][0].username;
 
-  console.log(nameFiltered)
-
   if (adminName) {
-    console.log(requestId, responseMessage, adminId, decision);
     const [result] = await pool.execute(
       "UPDATE requests SET responseMessage = ?, adminId = ?, adminName = ?, updatedAt = ?, status = ? WHERE requestId = ?",
       [responseMessage, adminId, nameFiltered, new Date(), decision, requestId]
@@ -161,7 +157,7 @@ async function registrarResposta(requestId, responseMessage, adminId, decision) 
 
   return {
     requestId,
-    adminName,
+    nameFiltered,
     responseMessage,
   };
 }
@@ -181,17 +177,28 @@ async function registrarNotificacaoRequest(userId, requestId, message) {
 
 async function registrarNotificacaoResposta(adminId, requestId, responseMessage) {
   const informacoes = await buscarRequestPorId(requestId);
-  const userId = informacoes[0][0].userId;
-  const message = informacoes[0][0].message;
+  const userId = informacoes?.userId;
+  const message = informacoes?.message;
 
-  const [result] = await pool.execute(
-    "INSERT INTO notifications (userId, adminId, requestId, type, message, responseMessage, createdAt, isRead) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-    [userId, adminId, requestId, 'response', message, responseMessage, new Date(), true]
-  );
+  if (userId, message) {
+    const [result] = await pool.execute(
+      "INSERT INTO notifications (userId, adminId, requestId, type, message, responseMessage, createdAt, isRead) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      [userId, adminId, requestId, 'response', message, responseMessage, new Date(), true]
+    );
 
-  return {
-    result
-  };
+    return {
+      userId, 
+      adminId,
+      requestId,
+      message,
+      responseMessage,
+    };
+
+  }
+
+
+
+
 }
 
 
@@ -210,3 +217,5 @@ module.exports = {
   buscarNotificacoesUser,
   buscarRequestPorId,
 };
+
+

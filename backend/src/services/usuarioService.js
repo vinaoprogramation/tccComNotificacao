@@ -198,6 +198,8 @@ async function getRequestsAdmin(userId) {
 
 async function getRequestsUser(userId) {
 
+  console.log("Service: "+userId)
+
   const usuario = await usuarioRepository.buscarPorId(userId);
 
   if (!usuario) {
@@ -205,7 +207,7 @@ async function getRequestsUser(userId) {
   }
 
   const requests = await usuarioRepository.buscarRequestsUser(userId);
-  const notifications = await usuarioRepository.buscarNotificacoesUser();  
+  const notifications = await usuarioRepository.buscarNotificacoesUser(userId);  
   return {
     requests,
     notifications

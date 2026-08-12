@@ -2,16 +2,18 @@ import react, { useState, useEffect } from 'react';
 
 import { View, Text, Button, StyleSheet, TextInput, ScrollView, TouchableOpacity, FlatList } from 'react-native';
 
+import MenuRodape from '../../ComponentesReutilzaveis/MenuRodape';
 
 import styles from './styles';
 
 import useNotification from '../../Services/notifications';
-
+import useTokenStore from '../../Services/useTokenStore';
 export default function Notificacoes({ navigation }) {
   const notificacoes = useNotification((state) => state.notificacoes);
   const mensagem = useNotification((state) => state.mensagem);
   const carregaNotificacoes = useNotification((state) => state.carregaNotificacoes);
   const enviaResposta = useNotification((state) => state.enviaResposta);
+  const user = useNotification((state) => state.user);
 
   const [expande, setExpande] = useState(false);
   const [requestExpande, setRequestExpande] = useState('');
@@ -30,19 +32,38 @@ export default function Notificacoes({ navigation }) {
   };
 
   const envia = (requestId, responseMessage, decision) => {
-    if(!requestId || !responseMessage || !decision){
+    if(!requestId || !responseMessage || decision==null){
       console.log("Faltam coisas")
       return;
     }
     if(decision == false){
       enviaResposta(requestId, responseMessage, 'rejected');
       setMensagemAdmin('')
+      carregaNotificacoes();
       return;
     } else{
       enviaResposta(requestId, responseMessage, 'approved');
       ('')
+      carregaNotificacoes();
+      return;
+    }
+
+  }
+
+  useEffect(() => {
+
+
+  const carrega = () => {
+    if (carregaNotificacoes) {
+      carregaNotificacoes();
     }
   }
+
+    const intervalo = setInterval(carrega, 3000);
+
+
+    return () => clearInterval(intervalo)
+  }, [])
 
 
   useEffect(() => {
@@ -51,10 +72,13 @@ export default function Notificacoes({ navigation }) {
     }
   }, [carregaNotificacoes])
 
+
+
   return <>
-    {!mensagem ? (<ScrollView>
+
+    {!mensagem ? (<View>
       <View style={styles.conteudo}>
-        <Text style={styles.titulo}>Teste</Text>
+        <Text style={styles.titulo}>Notificações</Text>
 
 
         <FlatList
@@ -74,10 +98,10 @@ export default function Notificacoes({ navigation }) {
               onPress={() => {
                 mudaExpande(item.requestId)
               }}
+              activeOpacity={1}
             >
               <View style={styles.item}>
-
-                <Text style={styles.nome}>{item.username}</Text>
+                {item.adminName == user?.username? (<Text style={styles.nome}>Você</Text>) : (<Text style={styles.nome}>{item.username}</Text>)}
                 <Text style={styles.mensagem}>{item.message}</Text>
                 <Text>Pedido enviado às {item.createdAt}</Text>
                 <Text style={[styles.mensagem, styles.status, item.status == 'approved' ? (styles.statusAprovado) : item.status == 'pending' ? (styles.statusPendente) : (styles.statusReprovado)]}>{item.status}</Text>
@@ -95,7 +119,12 @@ export default function Notificacoes({ navigation }) {
                     {item.responseMessage ? (null) : (<Text style={[styles.conteudoResposta, styles.mensagem]}>Pendente</Text>)}
                   </View>
 
-                  <TextInput
+                  {item.responseMessage? (null) : 
+                  item.adminName == user?.username? (null) :
+                  (
+                    <View>
+
+                    <TextInput
                     value={mensagemAdmin}
                     onChangeText={setMensagemAdmin}
                     placeholder='Envie a resposta da requisição por aqui'
@@ -112,13 +141,21 @@ export default function Notificacoes({ navigation }) {
                   </TouchableOpacity>
 
 
-                  <TouchableOpacity style={[styles.botaoDecisao, styles.botaoRecusa]}>
+                  <TouchableOpacity 
+                  style={[styles.botaoDecisao, styles.botaoRecusa]}
                   onPress={() => {
                     envia(item.requestId, mensagemAdmin, false)
                   }}
+                  >
+                  
 
                     <Text style={styles.textoBotaoDecisao}>Recusar</Text>
                   </TouchableOpacity>
+                  
+                  </View>
+                  )}
+
+                  
 
                   
 
@@ -147,7 +184,7 @@ export default function Notificacoes({ navigation }) {
 
         <Text style={styles.textoBotao}>Voltar</Text>
       </TouchableOpacity>
-    </ScrollView>) : (
+    </View>) : (
 
       <View style={styles.conteudo}>
         <Text style={styles.mensagem}>{mensagem}</Text>

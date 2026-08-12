@@ -25,7 +25,7 @@ export default function Login({navigation}) {
     if (autenticado) {
       setUsername('')
       setPassword('')
-      navigation.navigate('HomeScreen')
+      navigation.navigate('Lobby')
     }
   }, [autenticado])
 

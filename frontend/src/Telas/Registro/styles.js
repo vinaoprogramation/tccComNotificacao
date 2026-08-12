@@ -3,7 +3,7 @@ const { width, height } = Dimensions.get('screen')
 
 const styles = StyleSheet.create({
   fundo: {
-    backgroundColor: "#7e6fff"
+    backgroundColor: "#ffffff"
   },
   titulo: {
     fontSize: 35,
@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     marginTop: 300,
     marginLeft: 20,
-    color: '#ffffff',
+    color: '#000000',
     textShadowColor: "#0000004d",
     textShadowRadius: 5,
     textShadowOffset: { width: 0.1, height: 0.1 }
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
   botao: {
-    backgroundColor: "#4900be",
+    backgroundColor: "#ffffff",
     width: width * 0.9,
     alignSelf: 'center',
     paddingVertical: 15,
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 20,
     fontWeight: 'regular',
-    color: "#ffffff"
+    color: "#000000"
   },
 
 })

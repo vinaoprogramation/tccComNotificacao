@@ -3,7 +3,9 @@ import {getToken} from './authStorage';
 
 
 const api = axios.create({
-  baseURL: 'http://10.0.2.2:3000',
+  baseURL: 'http://192.168.1.11:3000',
+  //10.0.2.2
+  //192.168.1.11
 });
 
 api.interceptors.request.use(

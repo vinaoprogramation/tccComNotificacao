@@ -17,8 +17,10 @@ import styles, {
     LARGURA_ABA
 } from "./styles";
 
+import useTokenStore from "../../Services/useTokenStore";
+export default function AbaLateral({ navigation }) {
 
-export default function AbaLateral({navigation}) {
+    const mode = useTokenStore((state) => state.mode);
 
     const mostra = useMenu(
         (state) => state.mostra
@@ -167,7 +169,7 @@ export default function AbaLateral({navigation}) {
 
                 else {
 
-        
+
 
                     Animated.spring(
                         translateX,
@@ -256,13 +258,42 @@ export default function AbaLateral({navigation}) {
                     </TouchableOpacity>
 
 
+                    {!mode ? (null) : (
+                        <View>
+                            <TouchableOpacity
+                                style={
+                                    styles.botaoConteudo
+                                }
+
+                                onPress={() => {
+                                    navigation.navigate('Notificacoes')
+                                }}
+                            >
+
+                                <Text
+                                    style={[
+                                        styles.texto,
+                                        styles.notificacoes
+                                    ]}
+                                >
+                                    Notificações
+                                </Text>
+
+                            </TouchableOpacity>
+                        </View>
+
+                    )}
+
+
+
+
                     <TouchableOpacity
                         style={
                             styles.botaoConteudo
                         }
 
                         onPress={() => {
-                            navigation.navigate('Notificacoes')
+                            navigation.navigate('MeusPedidos')
                         }}
                     >
 
@@ -272,10 +303,13 @@ export default function AbaLateral({navigation}) {
                                 styles.notificacoes
                             ]}
                         >
-                            Notificações
+                            Meus Pedidos
                         </Text>
 
                     </TouchableOpacity>
+
+
+                    
 
                 </View>
 
