@@ -1,13 +1,12 @@
 import axios from 'axios';
-import {getToken} from './authStorage';
+import { Platform } from 'react-native';
+import { getToken } from './authStorage';
 
+const isWeb = Platform.OS === 'web';
 
 const api = axios.create({
-  baseURL: 'http://192.168.1.11:3000',
-  //10.0.2.2
-  //192.168.1.11
+  baseURL: isWeb ? 'http://localhost:3000' : 'http://10.0.2.2:3000',
 });
-
 api.interceptors.request.use(
   async (config) => {
     const token = await getToken();

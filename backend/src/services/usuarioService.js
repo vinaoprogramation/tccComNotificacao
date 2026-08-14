@@ -34,7 +34,8 @@ async function login(username, password) {
   return {
     token,
     username: usuarioEncontrado.username,
-    role: usuarioEncontrado.role
+    role: usuarioEncontrado.role,
+    foto: usuarioEncontrado.photoUrl
   };
 }
 
@@ -72,6 +73,25 @@ async function registrar(username, password) {
 }
 
 
+async function registrarFoto(photoUrl, userId) {
+
+
+
+  const existente = await usuarioRepository.buscarPorUsuario(userId);
+
+  if (existente) {
+    throw new Error('Usuário não existe');
+  }
+
+  const registro = await usuarioRepository.registrarFoto(photoUrl, userId);
+
+  if(registro){
+    return {
+      photoUrl, userId
+  }
+}
+}
+
 
 
 async function registrarAdmin(userId, username, password) {
@@ -105,7 +125,7 @@ async function registrarAdmin(userId, username, password) {
 
 
 
-async function registrarRequest(userId, message) {
+async function registrarRequest(userId, material, filamentColor, weight) {
 
   const usuario = await usuarioRepository.buscarPorId(userId);
 
@@ -113,12 +133,16 @@ async function registrarRequest(userId, message) {
     throw new Error('Usuário não existe');
   }
 
+  if(!material || !filamentColor || !weight){
+    throw new Error('Material, Cor do filamento e peso necessáios');
+  }
+
 
   const registro = await usuarioRepository.registrarRequest(
-    userId, usuario.username, message
+    userId, usuario.username, material, filamentColor, weight
   );
 
-  const notificacao = await usuarioRepository.registrarNotificacaoRequest(userId, registro.id, message);
+  const notificacao = await usuarioRepository.registrarNotificacaoRequest(userId, registro.id);
 
   return {
     registro
@@ -128,6 +152,7 @@ async function registrarRequest(userId, message) {
 
 
 async function registrarResposta(requestId, responseMessage, adminId, decision) {
+  console.log("No service: "+ requestId, responseMessage, adminId, decision)
 
   const usuario = await usuarioRepository.buscarPorId(adminId);
 
@@ -198,8 +223,6 @@ async function getRequestsAdmin(userId) {
 
 async function getRequestsUser(userId) {
 
-  console.log("Service: "+userId)
-
   const usuario = await usuarioRepository.buscarPorId(userId);
 
   if (!usuario) {
@@ -233,6 +256,7 @@ async function getRequestsById(requestId) {
 module.exports = {
   login,
   registrar,
+  registrarFoto,
   registrarAdmin,
   registrarRequest,
   registrarResposta,

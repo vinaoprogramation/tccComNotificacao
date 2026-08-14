@@ -1,9 +1,14 @@
 import { create } from 'zustand';
 import { storeToken, getToken, removeToken } from './authStorage';
 
-const baseUrl = 'http://192.168.1.11:3000/usuarios'
+import { Platform } from 'react-native';
 
-const useTokenStore = create((set) => ({
+const isWeb = Platform.OS === 'web';
+const baseUrl = isWeb 
+  ? 'http://localhost:3000/usuarios' 
+  : 'http://10.0.2.2:3000/usuarios';
+
+const useTokenStore = create((set, get) => ({
   autenticado: false,
   user: null,
   mode: false,
@@ -23,9 +28,12 @@ const useTokenStore = create((set) => ({
       
       await storeToken(answer.token);
 
+      console.log(answer.foto)
+
       
       if (answer.token) {
-        set({ autenticado: true, user: { username: answer.username } });
+        set({ autenticado: true, user: { username: answer.username, foto: answer.foto } });
+        console.log(get().user)
         if(answer.role == 'admin'){
           set({mode: true})
         } else{

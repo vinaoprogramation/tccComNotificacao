@@ -1,3 +1,4 @@
+const { use } = require('../app');
 const usuarioService = require('../services/usuarioService');
 const { verificarToken } = require('../utils/jwt');
 
@@ -51,6 +52,49 @@ async function registrar(req, res) {
 }
 
 
+async function registrarFoto(req, res) {
+
+  try {
+    let photoBody = req.body.body;
+    
+    const token = req.headers.authorization
+
+    const tokenFormatado = token.split(" ");
+
+    const decoded = verificarToken(tokenFormatado[1])
+
+    const userId = decoded.userId
+    
+    if (photoBody.startsWith('"')) {
+      photoBody = photoBody.slice(1);
+    }
+  
+    if (photoBody.endsWith('"')) {
+      photoBody = photoBody.slice(0, -1);
+    }
+
+    const photoUrl = photoBody;
+
+
+
+    if (!photoUrl || !userId) {
+      return res.status(400).json({
+        error: 'Foto necessária'
+      });
+    }
+
+    const resultado = await usuarioService.registrarFoto(photoUrl, userId);
+
+    return res.json(resultado);
+
+  } catch (error) {
+    console.error(error);
+
+    return res.status(401).json({
+      error: 'Usuário já existe'
+    });
+  }
+}
 
 
 async function registrarAdmin(req, res) {
@@ -83,7 +127,11 @@ async function registrarAdmin(req, res) {
 async function registrarRequest(req, res) {
 
   try {
-     const message = req.body.body;
+     const {filamentColor, weight} = req.body;
+
+     const material = req.body.body
+
+     console.log(req.body)
     
     const token = req.headers.authorization
 
@@ -93,15 +141,14 @@ async function registrarRequest(req, res) {
 
     const userId = decoded.userId
 
-    console.log(userId, message)
 
-    if (!userId || !message) {
+    if (!userId || !material || !filamentColor || !weight) {
       return res.status(400).json({
         error: 'Id e mensagem obrigatórios'
       });
     }
 
-    const resultado = await usuarioService.registrarRequest(userId, message);
+    const resultado = await usuarioService.registrarRequest(userId, material, filamentColor, weight);
 
     return res.json(resultado);
 
@@ -119,7 +166,6 @@ async function registrarResposta(req, res) {
 
   try {
     const { responseMessage, decision } = req.body;
-    console.log(req.body)
     const requestId = req.body.body
 
     const token = req.headers.authorization
@@ -139,19 +185,26 @@ async function registrarResposta(req, res) {
 
     const request = await usuarioService.getRequestsById(requestId);
 
-    console.log(request.request)
+    console.log("No controller")
+
+
 
     if (request.request.userId == adminId) {
+      console.log("Erro admin")
       return res.status(400).json({
         error: 'Admin não pode responder a própria requisição'
       });
     }
 
-    if (request.request.responseMessage) {
+    if (request.request.responseMessage != null) {
+      console.log("Erro resposta")
+
       return res.status(400).json({
         error: 'Requisição já respondida'
       });
     }
+
+    console.log("Prestes a :" + requestId, responseMessage, adminId, decision)
 
     const resultado = await usuarioService.registrarResposta(requestId, responseMessage, adminId, decision);
 
@@ -237,6 +290,7 @@ async function getRequestsUser(req, res) {
 module.exports = {
   login,
   registrar,
+  registrarFoto,
   registrarAdmin,
   registrarRequest,
   registrarResposta,

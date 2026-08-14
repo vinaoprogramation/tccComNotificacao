@@ -51,7 +51,6 @@ export default function MeusPedidos({ navigation }) {
   useEffect(() => {
     if (carregaNotificacoesUser) {
       carregaNotificacoesUser();
-      console.log(notificacoesUser)
     }
   }, [carregaNotificacoesUser])
 

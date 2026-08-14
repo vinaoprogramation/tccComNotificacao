@@ -9,6 +9,8 @@
     "buffer": "^6.0.3",
     "dotenv": "^17.4.2",
     "expo": "~57.0.9",
+    "expo-file-system": "~57.0.2",
+    "expo-image-picker": "~57.0.9",
     "expo-secure-store": "~57.0.1",
     "expo-status-bar": "~57.0.1",
     "react": "19.2.3",

@@ -13,11 +13,15 @@ export default function Notificacoes({ navigation }) {
   const mensagem = useNotification((state) => state.mensagem);
   const carregaNotificacoes = useNotification((state) => state.carregaNotificacoes);
   const enviaResposta = useNotification((state) => state.enviaResposta);
-  const user = useNotification((state) => state.user);
+  const user = useTokenStore((state) => state.user);
 
   const [expande, setExpande] = useState(false);
   const [requestExpande, setRequestExpande] = useState('');
   const [mensagemAdmin, setMensagemAdmin] = useState('');
+
+  useEffect(() => {
+    console.log(user?.username)
+  }, [])
 
 
   const mudaExpande = (requestId) => {
@@ -33,7 +37,7 @@ export default function Notificacoes({ navigation }) {
 
   const envia = (requestId, responseMessage, decision) => {
     if(!requestId || !responseMessage || decision==null){
-      console.log("Faltam coisas")
+
       return;
     }
     if(decision == false){
@@ -120,7 +124,7 @@ export default function Notificacoes({ navigation }) {
                   </View>
 
                   {item.responseMessage? (null) : 
-                  item.adminName == user?.username? (null) :
+                  item.username == user?.username? (null) :
                   (
                     <View>
 

@@ -153,6 +153,30 @@ const styles = StyleSheet.create({
 
   textoEncomendar:{
     textAlign: 'center'
+  },
+  tituloInputs:{
+    fontSize: 20
+  },
+  input:{
+    fontSize: 16,
+    marginVertical: 5,
+    borderRadius: 10,
+    borderWidth: 1,
+    paddingHorizontal: 5
+  },
+  containerInputs:{
+    flexDirection: 'row',
+    gap: 10
+  },
+  containerValores:{
+    padding: 20,
+    gap: 10
+  },
+  valor:{
+    backgroundColor: '#ffffff',
+    borderRadius: 5,
+    elevation: 5,
+    padding:10
   }
 });
 

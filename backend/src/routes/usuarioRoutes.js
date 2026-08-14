@@ -3,6 +3,7 @@ const express = require('express');
 const {
     login,
     registrar,
+    registrarFoto,
     registrarAdmin,
     registrarRequest,
     registrarResposta,
@@ -17,6 +18,7 @@ const autenticarId = require('../middlewares/adminMiddleware')
 
 router.post('/login', login);
 router.post('/registrar', registrar);
+router.post('/registrar/foto', registrarFoto);
 router.post('/registrar/admin', autenticar, autenticarId, registrarAdmin);
 router.post('/registrar/request', autenticar, registrarRequest);
 router.post('/registrar/request/resposta', autenticar, autenticarId, registrarResposta);

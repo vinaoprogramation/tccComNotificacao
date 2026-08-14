@@ -22,19 +22,21 @@ export default function DetalhesImpressao({ navigation, route }) {
 
   const enviaRequest = useNotification((state) => state.enviaRequest);
 
-  const [mensagem, setMensagem] = useState('');
+  const [material, setMaterial] = useState(null);
+  const [filamentColor, setFilamentColor] = useState(null);
+  const [weight, setWeight] = useState(null);
 
   const handleEnvio = (message) => {
-    if(!message){
-      return("Mensagem necessária");
-    } else{
-      enviaRequest(message)
+    if (!material || !filamentColor || !weight) {
+      return ("PROPRIEDADES NECESSÁRIAS");
+    } else {
+      enviaRequest(material, filamentColor, weight)
     }
   }
 
   return <>
     <ScrollView style={styles.fundo}>
-  
+
       <View >
         <Text style={styles.titulo}>Detalhes</Text>
 
@@ -94,17 +96,46 @@ export default function DetalhesImpressao({ navigation, route }) {
               </View>
 
               <View style={styles.inputs}>
-                <TextInput
-                style={styles.input}
-                placeholder="Mensagem teste"
-                value={mensagem}
-                onChangeText={setMensagem}
-                />
+                <Text style={styles.tituloInputs}>Opções</Text>
+                <View style={styles.containerInputs}>
+                  <TouchableOpacity
+                  onPress={() => {
+                    setMaterial(item.material)
+                  }}
+                  >
+                    <Text style={styles.input}>{item.material}</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                  onPress={() => {
+                    setFilamentColor(item.cor_filamento)
+                  }}
+                  >
+                    <Text style={styles.input}>{item.cor_filamento}</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                  onPress={() => {
+                    setWeight(item.gramas)
+                  }}
+                  >
+                    <Text style={styles.input}>{item.gramas}</Text>
+                  </TouchableOpacity>
+
+                </View>
+
+                <View style={styles.containerValores}>
+                  <Text style={styles.valor}>Material: {material}</Text>
+                  <Text style={styles.valor}>Cor: {filamentColor}</Text>
+                  <Text style={styles.valor}>Peso: {weight}</Text>
+                </View>
+
+
 
                 <TouchableOpacity style={styles.botaoEncomendar}
-                onPress={() => {
-                  handleEnvio(mensagem)
-                }}
+                  onPress={() => {
+                    handleEnvio(material, filamentColor, weight)
+                  }}
                 >
                   <Text style={styles.textoEncomendar}>Encomendar</Text>
                 </TouchableOpacity>

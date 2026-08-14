@@ -38,7 +38,6 @@ const useNotification = create((set) => ({
             const answer = await response.data;
 
             set({ notificacoesUser: answer.requests })
-            console.log(answer.requests)
 
 
         } catch (error) {
@@ -65,13 +64,12 @@ const useNotification = create((set) => ({
     
         } catch (error) {
           console.error('Erro ao enviar resposta:', error);
-          console.log(error.response.data)
         }
       },
 
 
 
-      enviaRequest: async (message) => {
+      enviaRequest: async (material, filamentColor, weight) => {
       
         try {
           const response = await api.post(`/usuarios/registrar/request`, {
@@ -79,7 +77,7 @@ const useNotification = create((set) => ({
             headers: {
               'Content-Type': 'application/json',
             },
-            body: message
+            body: material, filamentColor, weight
           });    
           
     

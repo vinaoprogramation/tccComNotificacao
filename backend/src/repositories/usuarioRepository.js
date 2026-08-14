@@ -14,7 +14,7 @@ async function buscarPorUsuario(username) {
 
   const [rows] = await pool.execute(
     `
-      SELECT userId, username, password, role
+      SELECT userId, username, password, role, photoUrl
       FROM users
       WHERE username = ?
       LIMIT 1
@@ -22,7 +22,12 @@ async function buscarPorUsuario(username) {
     [username]
   );
 
+  console.log(rows)
+  
+
   return rows[0] || null;
+
+  
 }
 
 
@@ -30,13 +35,15 @@ async function buscarPorId(userId) {
 
   const [rows] = await pool.execute(
     `
-      SELECT userId, username, password, role
+      SELECT userId, username, password, role, photoUrl
       FROM users
       WHERE userId = ?
       LIMIT 1
     `,
     [userId]
   );
+
+  console.log(rows)
 
   return rows[0] || null;
 }
@@ -122,18 +129,36 @@ async function registrar(username, senhaHash, role, createdAt = new Date()) {
 
 
 
-
-async function registrarRequest(userId, username, message) {
+async function registrarFoto(photoUrl, userId) {
 
   const [result] = await pool.execute(
-    "INSERT INTO requests (userId, username, message, status, createdAt) VALUES (?, ?, ?, ?, ?)",
-    [userId, username, message, "pending", new Date()]
+    `
+      UPDATE users SET photoUrl = ? WHERE userId = ?
+    `,
+    [photoUrl, userId]
+  );
+
+  return {
+    photoUrl,
+    userId
+  };
+}
+
+
+
+async function registrarRequest(userId, username, material, filamentColor, weight) {
+
+  const [result] = await pool.execute(
+    "INSERT INTO requests (userId, username, status, createdAt, material, filamentColor, weight) VALUES (?, ?, ?, ?, ?, ?, ?)",
+    [userId, username, "pending", new Date(), material, filamentColor, weight]
   );
 
   return {
     id: result.insertId,
     username,
-    message
+    material, 
+    filamentColor, 
+    weight
   };
 }
 
@@ -162,11 +187,11 @@ async function registrarResposta(requestId, responseMessage, adminId, decision) 
   };
 }
 
-async function registrarNotificacaoRequest(userId, requestId, message) {
+async function registrarNotificacaoRequest(userId, requestId) {
 
   const [result] = await pool.execute(
-    "INSERT INTO notifications (userId, requestId, type, message, createdAt, isRead) VALUES (?, ?, ?, ?, ?, ?)",
-    [userId, requestId, 'request', message, new Date(), false]
+    "INSERT INTO notifications (userId, requestId, type, createdAt, isRead) VALUES (?, ?, ?, ?, ?)",
+    [userId, requestId, 'request', new Date(), false]
   );
 
   return {
@@ -207,6 +232,7 @@ module.exports = {
   buscarPorUsuario,
   buscarPorId,
   registrar,
+  registrarFoto,
   registrarRequest,
   registrarResposta,
   registrarNotificacaoRequest,
